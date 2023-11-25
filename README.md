@@ -37,3 +37,6 @@ poetry add [DEPENDENCY]
 ```
 
 This will change the pyproject.toml and poetry.lock. Make sure you commit these!
+
+## Logging
+Looky [here](https://stackoverflow.com/questions/4673373/logging-within-pytest-tests) for configuring logging.
