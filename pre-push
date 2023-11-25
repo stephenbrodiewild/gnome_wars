@@ -23,5 +23,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Run linter before push
+poetry run black --check .
+
+# If the linter fails, exit with a non-zero status
+if [ $? -ne 0 ]; then
+  echo "Linting must pass before push!"
+  exit 1
+fi
+
 # Exit zero means everything passed
 exit 0
