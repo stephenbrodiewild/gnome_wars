@@ -13,7 +13,6 @@ python = "^3.11"
 black = "^23.11.0"
 pygame = "^2.5.2"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
