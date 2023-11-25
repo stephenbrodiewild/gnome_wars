@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "gnome-wars"
+version = "0.1.0"
+description = ""
+authors = ["sbw <stephenbrodiewild@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+gnome-wars = "gnome_wars.main:main"
