@@ -12,6 +12,9 @@ pipx install poetry
 poetry install
 ```
 
+Assuming you're using VS-Code, enable format on save and configure it to use
+the black formatter.
+
 ## Running
 ```bash
 poetry run gnome-wars
