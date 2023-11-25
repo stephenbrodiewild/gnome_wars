@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Path to the pre-push hook
+HOOK_PATH=".git/hooks/pre-push"
+
+# Check if this script is not already the pre-push hook
+if [ "$(realpath $0)" != "$(realpath $HOOK_PATH)" ]; then
+    echo "Installing the pre-push hook..."
+    cp $0 $HOOK_PATH
+    chmod +x $HOOK_PATH
+    echo "The pre-push hook has been installed."
+    exit 0
+fi
+
+echo "Running pre-push hook"
+
+# Run tests before push
+poetry run pytest
+
+# If the tests fail, exit with a non-zero status
+if [ $? -ne 0 ]; then
+  echo "Tests must pass before push!"
+  exit 1
+fi
+
+# Exit zero means everything passed
+exit 0
