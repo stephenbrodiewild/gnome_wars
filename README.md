@@ -15,6 +15,11 @@ poetry install
 Assuming you're using VS-Code, enable format on save and configure it to use
 the black formatter.
 
+```bash
+chmod +x pre-push
+./pre-push
+```
+
 ## Running
 ```bash
 poetry run gnome-wars
