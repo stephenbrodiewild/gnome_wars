@@ -24,3 +24,11 @@ poetry run gnome-wars
 ```bash
 poetry run pytest
 ```
+
+## Adding dependencies
+Simply
+```bash
+poetry add [DEPENDENCY]
+```
+
+This will change the pyproject.toml and poetry.lock. Make sure you commit these!
