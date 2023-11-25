@@ -1,8 +1,16 @@
-# Example file showing a basic pygame "game loop"
 import pygame
+import logging
+import logging_config
+import gnome_wars.math
+
+logging_config.setup_logging()
+logger = logging.getLogger(__name__)
 
 
 def main():
+    # just to show how u would import stuff tbh
+    gnome_wars.math.ten()
+
     # pygame setup
     pygame.init()
     screen = pygame.display.set_mode((1280, 720))
@@ -16,6 +24,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 # Check if the 'Q' key is pressed
                 if event.key == pygame.K_q:
+                    logger.info("Pressed Q")
                     running = False
 
         # fill the screen with a color to wipe away anything from last frame
