@@ -5,6 +5,9 @@ description = ""
 authors = ["sbw <stephenbrodiewild@gmail.com>"]
 readme = "README.md"
 
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 
