@@ -17,16 +17,16 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Set up Python 3.11
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: "3.11"
+        cache: 'pip'
 
-    - name: Cache pipx environments and pip cache
+    - name: Cache pipx environments
       uses: actions/cache@v2
       with:
         path: |
           ~/.local/pipx
-          ~/.cache/pip
         key: ${{ runner.os }}-pipx-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
           ${{ runner.os }}-pipx-
