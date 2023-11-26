@@ -29,6 +29,8 @@ jobs:
           ${{ runner.os }}-poetry-
     - name: Install dependencies
       run: |
+        python3 -m pip install --user pipx
+        python3 -m pipx ensurepath
         pipx install poetry
         poetry install
     - name: Lint with black
