@@ -11,61 +11,51 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
 
-    - name: Cache pip packages
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cache/pip
-          ~/.local
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
-    - name: Cache pipx and poetry dependencies
+    - name: Cache pipx environments and pip cache
       uses: actions/cache@v2
       with:
         path: |
           ~/.local/pipx
-          ~/.cache/pypoetry
-        key: ${{ runner.os }}-python-${{ hashFiles('**/poetry.lock') }}-pipx-poetry
+          ~/.cache/pip
+        key: ${{ runner.os }}-pipx-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
-          ${{ runner.os }}-python-${{ hashFiles('**/poetry.lock') }}-pipx-poetry
-          ${{ runner.os }}-python-
+          ${{ runner.os }}-pipx-
 
-    - name: Install pipx if not present
+    - name: Cache Poetry dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/pypoetry
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+
+    - name: Install Poetry using pipx
       run: |
-        if ! command -v pipx &> /dev/null
+        if ! command -v pipx &> /dev/null || ! pipx list | grep -q poetry
         then
           python3 -m pip install --user pipx
           python3 -m pipx ensurepath
-        else
-          echo "pipx is already installed"
-        fi
-
-    - name: Install Poetry using pipx if not present
-      run: |
-        if ! pipx list | grep -q poetry
-        then
           pipx install poetry
         else
           echo "Poetry is already installed"
         fi
 
-    - name: Install dependencies
+    - name: Install dependencies with Poetry
       run: poetry install
 
     - name: Lint with black
-      run: poetry run black --check . 
+      run: poetry run black --check .
 
     - name: Test with pytest
       run: poetry run pytest
