@@ -20,22 +20,29 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
-    - name: Cache Python dependencies
+    
+    - name: Cache pipx and poetry dependencies
       uses: actions/cache@v2
       with:
-        path: ~/.cache/pypoetry
-        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        path: |
+          ~/.local/pipx
+          ~/.cache/pypoetry
+        key: ${{ runner.os }}-python-${{ hashFiles('**/poetry.lock') }}-pipx-poetry
         restore-keys: |
-          ${{ runner.os }}-poetry-
-    - name: Install dependencies
+          ${{ runner.os }}-python-${{ hashFiles('**/poetry.lock') }}-pipx-poetry
+          ${{ runner.os }}-python- 
+
+    - name: Install pipx and poetry
       run: |
         python3 -m pip install --user pipx
         python3 -m pipx ensurepath
         pipx install poetry
-        poetry install
+
+    - name: Install dependencies
+      run: poetry install
+
     - name: Lint with black
-      run: |
-        poetry run black --check . 
+      run: poetry run black --check . 
+
     - name: Test with pytest
-      run: |
-        poetry run pytest
+      run: poetry run pytest
