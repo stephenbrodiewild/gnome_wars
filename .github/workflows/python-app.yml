@@ -42,11 +42,24 @@ jobs:
           ${{ runner.os }}-python-${{ hashFiles('**/poetry.lock') }}-pipx-poetry
           ${{ runner.os }}-python-
 
-    - name: Install pipx and poetry
+    - name: Install pipx if not present
       run: |
-        python3 -m pip install --user pipx
-        python3 -m pipx ensurepath
-        pipx install poetry
+        if ! command -v pipx &> /dev/null
+        then
+          python3 -m pip install --user pipx
+          python3 -m pipx ensurepath
+        else
+          echo "pipx is already installed"
+        fi
+
+    - name: Install Poetry using pipx if not present
+      run: |
+        if ! pipx list | grep -q poetry
+        then
+          pipx install poetry
+        else
+          echo "Poetry is already installed"
+        fi
 
     - name: Install dependencies
       run: poetry install
