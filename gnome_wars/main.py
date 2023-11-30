@@ -1,7 +1,6 @@
 import pygame
 import logging
 import logging_config
-import gnome_wars.math
 import esper
 
 logging_config.setup_logging()
@@ -136,7 +135,7 @@ def main():
     screen = pygame.display.set_mode(RESOLUTION)
     clock = pygame.time.Clock()
     game_state = GameState()
-    
+
     logger.info("Creating entities")
     player = create_player_entity()
     create_enemy_entity()
