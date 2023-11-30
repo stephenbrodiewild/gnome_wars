@@ -72,60 +72,82 @@ class RenderProcessor:
         # Flip the framebuffers
         pygame.display.flip()
 
+class GameState:
+    def __init__(self):
+        self.running = True
+
+class EventProcessor:
+    def __init__(self, player_entity, game_state):
+        self.player_entity = player_entity
+        self.game_state = game_state
+
+    def process(self):
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                self.handle_keydown(event)
+            elif event.type == pygame.KEYUP:
+                self.handle_keyup(event)
+
+    def handle_keydown(self, event):
+        vel = esper.component_for_entity(self.player_entity, Velocity)
+        if event.key == pygame.K_LEFT:
+            vel.x = -3
+        elif event.key == pygame.K_RIGHT:
+            vel.x = 3
+        elif event.key == pygame.K_UP:
+            vel.y = -3
+        elif event.key == pygame.K_DOWN:
+            vel.y = 3
+        elif event.key == pygame.K_q:
+            self.game_state.running = False
+
+    def handle_keyup(self, event):
+        vel = esper.component_for_entity(self.player_entity, Velocity)
+        if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+            vel.x = 0
+        if event.key in (pygame.K_UP, pygame.K_DOWN):
+            vel.y = 0
+
+def create_player_entity():
+    player = esper.create_entity()
+    esper.add_component(player, Velocity(x=0, y=0))
+    esper.add_component(
+        player,
+        Renderable(image=pygame.image.load("assets/redsquare.png"), posx=100, posy=100)
+    )
+    return player
+
+def create_enemy_entity():
+    enemy = esper.create_entity()
+    esper.add_component(
+        enemy,
+        Renderable(
+            image=pygame.image.load("assets/bluesquare.png"), posx=400, posy=250
+        )
+    )
+    return enemy
+
 
 def main():
-    # just to show how u would import stuff tbh
-    gnome_wars.math.ten()
-
     # pygame setup
     pygame.init()
     screen = pygame.display.set_mode(RESOLUTION)
     clock = pygame.time.Clock()
 
-    player = esper.create_entity()
-    esper.add_component(player, Velocity(x=0, y=0))
-    esper.add_component(player, Renderable(image=pygame.image.load("assets/redsquare.png"), posx=100, posy=100))
-    # Another motionless Entity:
-    enemy = esper.create_entity()
-    esper.add_component(enemy, Renderable(image=pygame.image.load("assets/bluesquare.png"), posx=400, posy=250))
+    game_state = GameState()
+    player = create_player_entity()
+    create_enemy_entity()
 
-    # Create some Processor instances, and asign them to be processed.
+    event_processor = EventProcessor(player_entity=player, game_state=game_state)
     render_processor = RenderProcessor(window=screen)
-    movement_processor = MovementProcessor(minx=0, maxx=RESOLUTION[0], miny=0, maxy=RESOLUTION[1])
+    movement_processor = MovementProcessor(
+        minx=0, maxx=RESOLUTION[0], miny=0, maxy=RESOLUTION[1]
+    )
 
-    running = True
-    while running:
-        # poll for events
-        for event in pygame.event.get():
-            # Check for keydown event
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    # Here is a way to directly access a specific Entity's
-                    # Velocity Component's attribute (y) without making a
-                    # temporary variable.
-                    esper.component_for_entity(player, Velocity).x = -3
-                elif event.key == pygame.K_RIGHT:
-                    # For clarity, here is an alternate way in which a
-                    # temporary variable is created and modified. The previous
-                    # way above is recommended instead.
-                    player_velocity_component = esper.component_for_entity(player, Velocity)
-                    player_velocity_component.x = 3
-                elif event.key == pygame.K_UP:
-                    esper.component_for_entity(player, Velocity).y = -3
-                elif event.key == pygame.K_DOWN:
-                    esper.component_for_entity(player, Velocity).y = 3
-                # Check if the 'Q' key is pressed
-                elif event.key == pygame.K_q:
-                    running = False
-            elif event.type == pygame.KEYUP:
-                if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
-                    esper.component_for_entity(player, Velocity).x = 0
-                if event.key in (pygame.K_UP, pygame.K_DOWN):
-                    esper.component_for_entity(player, Velocity).y = 0
-
+    while game_state.running:
+        event_processor.process()
         render_processor.process()
         movement_processor.process()
-
         clock.tick(FPS)
 
     pygame.quit()
