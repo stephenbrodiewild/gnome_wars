@@ -44,7 +44,6 @@ class MovementProcessor:
     def process(self):
         # This will iterate over every Entity that has BOTH of these components:
         for ent, (vel, rend) in esper.get_components(Velocity, Renderable):
-            logging.info(f"Moving {ent}")
             # Update the Renderable Component's position by it's Velocity:
             rend.x += vel.x
             rend.y += vel.y
@@ -67,14 +66,15 @@ class RenderProcessor:
         self.window.fill(self.clear_color)
         # This will iterate over every Entity that has this Component, and blit it:
         for ent, rend in esper.get_component(Renderable):
-            logging.info(f"Rendering {ent}")
             self.window.blit(rend.image, (rend.x, rend.y))
         # Flip the framebuffers
         pygame.display.flip()
 
+
 class GameState:
     def __init__(self):
         self.running = True
+
 
 class EventProcessor:
     def __init__(self, player_entity, game_state):
@@ -108,14 +108,16 @@ class EventProcessor:
         if event.key in (pygame.K_UP, pygame.K_DOWN):
             vel.y = 0
 
+
 def create_player_entity():
     player = esper.create_entity()
     esper.add_component(player, Velocity(x=0, y=0))
     esper.add_component(
         player,
-        Renderable(image=pygame.image.load("assets/redsquare.png"), posx=100, posy=100)
+        Renderable(image=pygame.image.load("assets/redsquare.png"), posx=100, posy=100),
     )
     return player
+
 
 def create_enemy_entity():
     enemy = esper.create_entity()
@@ -123,31 +125,35 @@ def create_enemy_entity():
         enemy,
         Renderable(
             image=pygame.image.load("assets/bluesquare.png"), posx=400, posy=250
-        )
+        ),
     )
     return enemy
 
 
 def main():
-    # pygame setup
+    logger.info("Setting up Pygame")
     pygame.init()
     screen = pygame.display.set_mode(RESOLUTION)
     clock = pygame.time.Clock()
-
     game_state = GameState()
+    
+    logger.info("Creating entities")
     player = create_player_entity()
     create_enemy_entity()
 
+    logger.info("Creating processors")
     event_processor = EventProcessor(player_entity=player, game_state=game_state)
     render_processor = RenderProcessor(window=screen)
     movement_processor = MovementProcessor(
         minx=0, maxx=RESOLUTION[0], miny=0, maxy=RESOLUTION[1]
     )
 
+    logger.info("Beginning game loop")
     while game_state.running:
         event_processor.process()
         render_processor.process()
         movement_processor.process()
         clock.tick(FPS)
 
+    logger.info("Quitting")
     pygame.quit()
