@@ -147,11 +147,13 @@ def main():
         minx=0, maxx=RESOLUTION[0], miny=0, maxy=RESOLUTION[1]
     )
 
+    esper.add_processor(event_processor)
+    esper.add_processor(render_processor)
+    esper.add_processor(movement_processor)
+
     logger.info("Beginning game loop")
     while game_state.running:
-        event_processor.process()
-        render_processor.process()
-        movement_processor.process()
+        esper.process()
         clock.tick(FPS)
 
     logger.info("Quitting")
