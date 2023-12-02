@@ -7,16 +7,41 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "4.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "path.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "test tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tileset2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
     },
-    "last.imagePath": "/home/stephen/repos/gnome_wars/assets",
+    "last.imagePath": "/home/stephen/Downloads",
     "openFiles": [
     ],
     "project": "test.tiled-project",
     "recentFiles": [
+        "test tileset.tsx",
+        "tileset2.tsx",
+        "3.tsx",
+        "4.tsx",
+        "path.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 56,
-        "width": 56
+        "height": 86,
+        "width": 86
     }
 }
